@@ -13,7 +13,7 @@ import ObjectiveC
 private var associatedObjectHandle: UInt8 = 0
 
 public extension UIScrollView {
-    private(set) var pullToRefresh: PullToRefresh? {
+    fileprivate(set) var pullToRefresh: PullToRefresh? {
         get {
             return objc_getAssociatedObject(self, &associatedObjectHandle) as? PullToRefresh
         }
@@ -22,7 +22,7 @@ public extension UIScrollView {
         }
     }
     
-    public func addPullToRefresh(pullToRefresh: PullToRefresh, action:()->()) {
+    public func addPullToRefresh(_ pullToRefresh: PullToRefresh, action:@escaping ()->()) {
         if self.pullToRefresh != nil {
             self.removePullToRefresh(self.pullToRefresh!)
         }
@@ -32,12 +32,12 @@ public extension UIScrollView {
         pullToRefresh.action = action
         
         let view = pullToRefresh.refreshView
-        view.frame = CGRectMake(0, -view.frame.size.height, self.frame.size.width, view.frame.size.height)
+        view.frame = CGRect(x: 0, y: -view.frame.size.height, width: self.frame.size.width, height: view.frame.size.height)
         self.addSubview(view)
-        self.sendSubviewToBack(view)
+        self.sendSubview(toBack: view)
     }
     
-    func removePullToRefresh(pullToRefresh: PullToRefresh) {
+    func removePullToRefresh(_ pullToRefresh: PullToRefresh) {
         self.pullToRefresh?.refreshView.removeFromSuperview()
         self.pullToRefresh = nil
     }
