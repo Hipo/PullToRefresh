@@ -40,11 +40,11 @@ open class PullToRefresh: NSObject {
     }
     
     fileprivate func addScrollViewObserving() {
-        scrollView?.addObserver(self, forKeyPath: contentOffsetKeyPath, options: .initial, context: &KVOContext)
+        scrollView?.addObserver(self, forKeyPath: contentOffsetKeyPath, options: .initial, context: &PullToRefresh.KVOContext)
     }
     
     fileprivate func removeScrollViewObserving() {
-        scrollView?.removeObserver(self, forKeyPath: contentOffsetKeyPath, context: &KVOContext)
+        scrollView?.removeObserver(self, forKeyPath: contentOffsetKeyPath, context: &PullToRefresh.KVOContext)
     }
     
     // MARK: - State
@@ -100,12 +100,12 @@ open class PullToRefresh: NSObject {
     
     // MARK: KVO
     
-    fileprivate var KVOContext = "PullToRefreshKVOContext"
+    fileprivate static var KVOContext = "PullToRefreshKVOContext"
     fileprivate let contentOffsetKeyPath = "contentOffset"
     fileprivate var previousScrollViewOffset: CGPoint = CGPoint.zero
     
     override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if (context == &KVOContext && keyPath == contentOffsetKeyPath && object as? UIScrollView == scrollView) {
+        if (context == &PullToRefresh.KVOContext && keyPath == contentOffsetKeyPath && object as? UIScrollView == scrollView) {
             let offset = previousScrollViewOffset.y + scrollViewDefaultInsets.top
             let refreshViewHeight = refreshView.frame.size.height
             
